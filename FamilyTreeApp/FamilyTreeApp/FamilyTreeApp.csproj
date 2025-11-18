@@ -63,4 +63,10 @@
 		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.6" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <MauiXaml Update="PersonInputPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
 </Project>

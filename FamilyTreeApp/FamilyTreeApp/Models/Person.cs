@@ -1,4 +1,4 @@
-﻿using SkiaSharp; // Renkler için gerekli
+﻿using SkiaSharp;
 
 namespace FamilyTreeApp.Models;
 
@@ -9,8 +9,11 @@ public class Person
     public Gender Gender { get; set; }
     public List<string> Reigns { get; set; } = new List<string>();
 
-    // Görsel Ayarlar (Varsayılanlar)
-    // Erkekse Mavi tonu, Kadınsa Pembe tonu (Değiştirilebilir)
+    // Görsel Ayarlar
     public SKColor FillColor { get; set; } = SKColors.LightGray;
     public SKColor BorderColor { get; set; } = SKColors.Black;
+
+    // --- YENİ: Tıklama Kontrolü İçin ---
+    // Bu özellik veritabanına kaydedilmez, sadece o anki ekran konumu içindir.
+    public SKRect ScreenRect { get; set; }
 }

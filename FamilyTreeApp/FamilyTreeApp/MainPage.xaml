@@ -4,7 +4,23 @@
              xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
              x:Class="FamilyTreeApp.MainPage">
 
-    <skia:SKCanvasView x:Name="canvasView" 
-                       PaintSurface="OnCanvasViewPaintSurface" />
+    <Grid>
+        <skia:SKCanvasView x:Name="canvasView" 
+                           PaintSurface="OnCanvasViewPaintSurface"
+                           EnableTouchEvents="True"
+                           Touch="OnCanvasViewTouch" />
+
+        <Button Text="+"
+            FontSize="30"
+            WidthRequest="60"
+            HeightRequest="60"
+            CornerRadius="30"
+            BackgroundColor="{StaticResource Primary}"
+            TextColor="White"
+            HorizontalOptions="End"
+            VerticalOptions="End"
+            Margin="20"
+            Clicked="OnAddPersonClicked"/>
+    </Grid>
 
 </ContentPage>

@@ -14,20 +14,28 @@ public static class LineDrawer
             IsAntialias = true
         };
 
-        // Basit bir "Manhattan" çizgisi (Önce aşağı, sonra yana, sonra aşağı)
-        // Köşeleri yuvarlatmak için SKPath kullanıyoruz.
-
         SKPath path = new SKPath();
-        path.MoveTo(x1, y1); // Başlangıç (Üst kutunun altı)
+        path.MoveTo(x1, y1);
 
-        float midY = (y1 + y2) / 2; // İki kutunun tam ortası
-
-        // Eğer köşe yuvarlatma istiyorsan burası biraz matematik gerektirir.
-        // Şimdilik düz çizgilerle iskeleti kuralım, sonra "ArcTo" ile yuvarlatırız.
-
-        path.LineTo(x1, midY); // Aşağı in
-        path.LineTo(x2, midY); // Yana git
-        path.LineTo(x2, y2);   // Hedefe in
+        // Eğer X koordinatları eşitse (Dikey hat), sadece LineTo kullan
+        if (Math.Abs(x1 - x2) < 1) // 1 pikselden az fark varsa düz kabul et
+        {
+            // Sadece dikey in
+            path.LineTo(x2, y2);
+        }
+        else if (Math.Abs(y1 - y2) < 1) // Eğer Y koordinatları eşitse (Yatay hat)
+        {
+            // Sadece yatay git
+            path.LineTo(x2, y2);
+        }
+        else
+        {
+            // Eğer hem X hem Y farklıysa (Manhattan/Köşeli bağlantı)
+            float midY = (y1 + y2) / 2;
+            path.LineTo(x1, midY); // Aşağı in
+            path.LineTo(x2, midY); // Yana git
+            path.LineTo(x2, y2);   // Hedefe in
+        }
 
         canvas.DrawPath(path, linePaint);
     }

@@ -1,0 +1,50 @@
+services:
+  familytree-mysql:
+    image: mysql:8.4
+    container_name: familytree_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: FamilyTree2024!
+      MYSQL_DATABASE: familytree
+      MYSQL_USER: familytree_user
+      MYSQL_PASSWORD: FamilyTreeUser2024!
+      TZ: Europe/Istanbul
+    ports:
+      - "3308:3306"  # External port 3308, internal 3306
+      - "33060:33060"  # MySQL X Protocol
+    volumes:
+      - familytree_mysql_data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d  # Optional: init scripts
+    command: 
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - familytree_network
+
+  # Optional: Adminer for database management
+  familytree-adminer:
+    image: adminer:latest
+    container_name: familytree_adminer
+    restart: unless-stopped
+    ports:
+      - "8083:8080"  # Adminer web interface
+    environment:
+      ADMINER_DEFAULT_SERVER: familytree-mysql
+    networks:
+      - familytree_network
+    depends_on:
+      - familytree-mysql
+
+volumes:
+  familytree_mysql_data:
+    driver: local
+
+networks:
+  familytree_network:
+    driver: bridge
+

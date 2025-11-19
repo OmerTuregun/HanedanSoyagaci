@@ -8,7 +8,7 @@
            CornerRadius="15" WidthRequest="300" Padding="20" BackgroundColor="White">
         <VerticalStackLayout Spacing="15">
 
-            <Label Text="Yeni Kişi Ekle" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"/>
+            <Label x:Name="TitleLabel" Text="Yeni Kişi Ekle" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"/>
 
             <Entry x:Name="NameEntry" Placeholder="İsim Giriniz (Örn: IV. Murad)" />
 
@@ -22,7 +22,7 @@
 
             <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
                 <Button Text="İptal" BackgroundColor="Gray" Clicked="OnCancelClicked"/>
-                <Button Text="Kaydet" BackgroundColor="#2196F3" Clicked="OnSaveClicked"/>
+                <Button x:Name="SaveButton" Text="Kaydet" BackgroundColor="#2196F3" Clicked="OnSaveClicked"/>
             </HorizontalStackLayout>
 
         </VerticalStackLayout>

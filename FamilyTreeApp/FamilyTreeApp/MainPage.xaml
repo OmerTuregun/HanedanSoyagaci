@@ -5,10 +5,41 @@
              x:Class="FamilyTreeApp.MainPage">
 
     <Grid>
-        <skia:SKCanvasView x:Name="canvasView" 
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Menü Bar -->
+        <Grid Grid.Row="0" BackgroundColor="{StaticResource Primary}" Padding="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <Label Text="Hanedan Soy Ağacı" 
+                   FontSize="18" 
+                   FontAttributes="Bold" 
+                   TextColor="White" 
+                   VerticalOptions="Center"/>
+            
+            <Button Grid.Column="1"
+                    Text="📥 Dışa Aktar (PNG)"
+                    BackgroundColor="Transparent"
+                    TextColor="White"
+                    Clicked="OnExportClicked"/>
+        </Grid>
+
+        <skia:SKCanvasView Grid.Row="1"
+                           x:Name="canvasView" 
                            PaintSurface="OnCanvasViewPaintSurface"
-                           EnableTouchEvents="True"
-                           Touch="OnCanvasViewTouch" />
+                           EnableTouchEvents="True">
+            <skia:SKCanvasView.GestureRecognizers>
+                <PointerGestureRecognizer PointerMoved="OnPointerMoved"
+                                          PointerPressed="OnPointerPressed"
+                                          PointerReleased="OnPointerReleased"/>
+            </skia:SKCanvasView.GestureRecognizers>
+        </skia:SKCanvasView>
 
         <Button Text="+"
             FontSize="30"

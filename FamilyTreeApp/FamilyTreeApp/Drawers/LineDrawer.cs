@@ -1,10 +1,11 @@
 ﻿using SkiaSharp;
+using FamilyTreeApp.Models;
 
 namespace FamilyTreeApp.Drawers;
 
 public static class LineDrawer
 {
-    public static void DrawConnection(SKCanvas canvas, float x1, float y1, float x2, float y2)
+    public static void DrawConnection(SKCanvas canvas, float x1, float y1, float x2, float y2, bool isUncertain = false)
     {
         SKPaint linePaint = new SKPaint
         {
@@ -13,6 +14,12 @@ public static class LineDrawer
             StrokeWidth = 3,
             IsAntialias = true
         };
+
+        // Belirsiz ilişkiler için noktalı/kesikli çizgi
+        if (isUncertain)
+        {
+            linePaint.PathEffect = SKPathEffect.CreateDash(new float[] { 10, 5 }, 0);
+        }
 
         SKPath path = new SKPath();
         path.MoveTo(x1, y1);

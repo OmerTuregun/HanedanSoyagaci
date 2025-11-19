@@ -1,23 +1,43 @@
 using FamilyTreeApp.Models;
-using SkiaSharp; // Renkler için
+using SkiaSharp;
 
 namespace FamilyTreeApp;
 
 public partial class PersonInputPage : ContentPage
 {
-    // Veriyi geri döndürmek için bir "Task" (Görev) yapýsý kullanýyoruz
     private TaskCompletionSource<Person> _tcs;
+    private Person _editingPerson;
 
     public PersonInputPage()
     {
         InitializeComponent();
     }
 
-    // Sayfayý dýþarýdan çaðýrmak ve sonucu beklemek için bu metodu kullanacaðýz
+    // Yeni kiÅŸi ekleme iÃ§in
     public static async Task<Person> Show(INavigation navigation)
     {
         var page = new PersonInputPage();
         page._tcs = new TaskCompletionSource<Person>();
+        page.TitleLabel.Text = "Yeni KiÅŸi Ekle";
+        page.SaveButton.Text = "Kaydet";
+
+        await navigation.PushModalAsync(page);
+
+        return await page._tcs.Task;
+    }
+
+    // Mevcut kiÅŸiyi dÃ¼zenleme iÃ§in
+    public static async Task<Person> ShowForEdit(INavigation navigation, Person person)
+    {
+        var page = new PersonInputPage();
+        page._tcs = new TaskCompletionSource<Person>();
+        page._editingPerson = person;
+        
+        // Mevcut bilgileri doldur
+        page.TitleLabel.Text = "KiÅŸi DÃ¼zenle";
+        page.NameEntry.Text = person.Name;
+        page.GenderPicker.SelectedIndex = person.Gender == Gender.Male ? 0 : 1;
+        page.SaveButton.Text = "GÃ¼ncelle";
 
         await navigation.PushModalAsync(page);
 
@@ -29,27 +49,37 @@ public partial class PersonInputPage : ContentPage
         string name = NameEntry.Text;
         if (string.IsNullOrWhiteSpace(name))
         {
-            await DisplayAlert("Hata", "Lütfen bir isim giriniz.", "Tamam");
+            await DisplayAlert("Hata", "LÃ¼tfen bir isim giriniz.", "Tamam");
             return;
         }
 
-        // Yeni kiþiyi oluþtur
-        var person = new Person
+        Person person;
+        if (_editingPerson != null)
         {
-            Name = name,
-            Gender = GenderPicker.SelectedIndex == 0 ? Gender.Male : Gender.Female,
-            // Renkleri þimdilik burada basit atýyoruz
-            FillColor = GenderPicker.SelectedIndex == 0 ? SKColors.LightBlue : SKColors.Pink
-        };
+            // DÃ¼zenleme modu: Mevcut kiÅŸiyi gÃ¼ncelle
+            person = _editingPerson;
+            person.Name = name;
+            person.Gender = GenderPicker.SelectedIndex == 0 ? Gender.Male : Gender.Female;
+        }
+        else
+        {
+            // Yeni kiÅŸi oluÅŸtur
+            person = new Person
+            {
+                Name = name,
+                Gender = GenderPicker.SelectedIndex == 0 ? Gender.Male : Gender.Female,
+                FillColor = GenderPicker.SelectedIndex == 0 ? SKColors.LightBlue : SKColors.Pink
+            };
+        }
 
-        // Pencereyi kapat ve kiþiyi gönder
+        // Pencereyi kapat ve kiÅŸiyi gÃ¶nder
         await Navigation.PopModalAsync();
         _tcs.SetResult(person);
     }
 
     private async void OnCancelClicked(object sender, EventArgs e)
     {
-        // Ýptal edilirse null döndür
+        // Ä°ptal edilirse null dÃ¶ndÃ¼r
         await Navigation.PopModalAsync();
         _tcs.SetResult(null);
     }
